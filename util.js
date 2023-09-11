@@ -19,17 +19,3 @@ function formatRO(range) {
   range.setFontStyle("italic").setBackgroundRGB(200, 200, 200);
 }
 
-function sheetToJson(sheet) {
-  let values = sheet.getDataRange().getValues();
-  let headers = values[0];
-  let out = [];
-  for (let rn = 1; rn < values.length; rn++) {
-    let row = values[rn];
-    let json = {};
-    for (let cn = 0; cn < row.length; cn++) {
-      json[headers[cn]] = row[cn];
-    }
-    out.push(json);
-  }
-  return out;
-}
