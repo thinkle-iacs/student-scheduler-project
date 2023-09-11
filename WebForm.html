@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+
+    <script>
+
+      function onGetUser (user) {
+        console.log('Got user',user);
+        document.querySelector('#user').innerHTML = user;
+      }
+      google.script.run.withSuccessHandler(onGetUser).getWebUser();
+      console.log('Got params???',document.location.searchParams)
+
+      function onGetFormData ({placements,sheets,days,students}) {
+        console.log('Got placements',placements);
+        console.log('Got days',days);
+        console.log('Got sheets',sheets);
+        console.log('Got students',students)
+        setupStudentDatalist(students);
+        setupDays(days, placements);
+      }
+
+      function setupStudentDatalist (students) {
+        let datalist = document.querySelector('#student-list');
+        let elements = students.map(
+          (s)=>`
+            <option value="${s.Name}">${s.Name} (${s.Username})</option>
+          `          
+        )
+        datalist.innerHTML = elements.join('\n');
+        $('#student-list').selectize(
+          {
+            render : (data, escape) => `<b>${data}</b>`
+          }
+        );
+      }
+
+      function setupDays (days, placements) {
+        let container = document.querySelector('#days');
+        container.innerHTML = '';
+        for (let d of days) {
+          let dayElement = createDay(d, placements);
+          container.appendChild(dayElement);
+        }
+      }
+
+      let dayCount = 0;
+      
+      function createDay (day, placements) {
+        let dayname = day['Day Name'];
+        let element = document.createElement('div');
+        element.classList.add('cols');
+        dayCount += 1;
+        let id = `day-${dayCount}`;
+        let datalist = document.createElement('datalist');
+        datalist.id = `${id}-list`;
+        element.innerHTML = `
+        <label for=${id}>${dayname}</label> 
+        <input type="text" id=${id} list=
+        "${id}-list">
+        `;
+        let placementHTML = placements.filter(
+          (p)=>p[dayname]
+        ).map(
+          (p)=>`<option value="${p['Name']}">${p['Staff']} (limit: ${p.Limit})</option>`
+        ).join('\n');
+        datalist.innerHTML = placementHTML
+        element.appendChild(datalist);
+        return element;
+      }
+
+      google.script.run.withSuccessHandler(onGetFormData).getFormData();
+
+    </script>
+  </head>
+  <body>
+    
+    <header><b>Logged in as <span id="user">...</span></b></header>
+    <div class="cols">
+    <label for="student-input" aria-for="student-input">Student:</label> <select id="student-list"></select>
+    </div>
+
+    <div  id="days">
+      </div>
+
+
+    <b>Got a parameter: <?=param?></b>
+
+  </body>
+
+  <style>
+    :root {
+      --pad : 6px;
+     
+    }
+  body {
+     font-family: Verdana;
+     font-size: 16pt;
+     color : #222;
+  }
+
+
+    .cols {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 5px;
+      margin: auto;
+    }
+    .cols *:first-child {
+      justify-self: end;
+    }
+    label, input {
+      margin-top: var(--pad);
+      margin-bottom: var(--pad);
+    }
+    label, input {
+      height: 32px;
+    }
+
+    input {
+      max-width: 24em;
+    }
+
+    label {
+      display: grid;
+      place-content: center;
+    }
+
+</html>
