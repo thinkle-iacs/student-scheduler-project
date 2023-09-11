@@ -11,14 +11,14 @@ function getDays () {
 */
 
 function getPlacementOptions() {
-  return readSheet(PLACEMENT_SHEET);
+  return readSheetWithValidation(PLACEMENT_SHEET,true,PLACEMENT_FIELDS);
 }
 function getPlacementSheets() {
-  return readSheet(PLACEMENT_SHEET_LIST);
+  return readSheetWithValidation(PLACEMENT_SHEET_LIST,true,PLACEMENT_LIST_FIELDS);
 }
 
 function getStudents() {
-  return readSheet(STUDENT_SHEET);
+  return readSheetWithValidation(STUDENT_SHEET,true,STUDENT_FIELDS);
 }
 
 function readSheet(sheetName, skipBlank = true) {

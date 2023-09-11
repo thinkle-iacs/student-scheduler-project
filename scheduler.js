@@ -13,9 +13,8 @@ function Scheduler() {
     schedules[d] = {};
   }
 
-  this.readSchedules = () => {
-    let slotSheet = ss.getSheetByName(PLACEMENT_SHEET);
-    let jsonData = sheetToJson(slotSheet);
+  this.readSchedules = () => {            
+    let jsonData = getPlacementOptions();
     for (let slotRow of jsonData) {
       for (let d of days) {
         if (slotRow[d]) {

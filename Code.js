@@ -1,3 +1,4 @@
+/* This just creates our menu setup */
 function onOpen(e) {
   let createMenu = SpreadsheetApp.getUi()
     .createMenu("Setup")
