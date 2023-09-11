@@ -36,7 +36,7 @@ function createTimerSheet() {
   let sheet = setupConfigSheet(AUTOMATION_SHEET, AUTOMATION_FIELDS, true);
   sheet.appendRow(AUTOMATION_DOCS);
   sheet
-    .getRange("B3:C")
+    .getRange("C3:D")
     .setDataValidation(
       SpreadsheetApp.newDataValidation()
         .requireNumberGreaterThanOrEqualTo(0)
@@ -48,7 +48,7 @@ function createTimerSheet() {
       SpreadsheetApp.newDataValidation().requireCheckbox().build()
     );
   sheet
-    .getRange("D3:D")
+    .getRange("E3:E")
     .setDataValidation(
       SpreadsheetApp.newDataValidation().requireCheckbox().build()
     );
