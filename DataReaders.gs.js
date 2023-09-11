@@ -1,15 +1,3 @@
-/*
-const DAY_SHEET = 'Days';
-const STUDENT_SHEET = 'Students';
-const PLACEMENT_SHEET = 'Placement Options';
-const PBD_SHEET = '_Placements_by_Day'*/
-
-/*
-function getDays () {
-  return readSheet(DAY_SHEET);
-}
-*/
-
 function getPlacementOptions() {
   return readSheetWithValidation(PLACEMENT_SHEET,true,PLACEMENT_FIELDS);
 }
