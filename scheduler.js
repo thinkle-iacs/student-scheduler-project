@@ -27,12 +27,10 @@ function Scheduler() {
     }
   };
 
-  this.readStudents = () => {
-    let studentSheet = ss.getSheetByName(STUDENT_SHEET);
-    let jsonData = sheetToJson(studentSheet);
-    this.students = jsonData;
+  this.readStudents = () => {    
+    this.students = getStudents();
     this.studentMap = {};
-    for (let s of jsonData) {
+    for (let s of this.students) {
       s.schedule = {};
       for (let d of days) {
         s.schedule[d] = null;
@@ -47,14 +45,14 @@ function Scheduler() {
     this.readSchedules();
   };
 
-  this.scheduleSheet = (sheetName) => {
-    let sheet = ss.getSheetByName(sheetName);
-    if (!sheet) {
-      throw `Expected sheet "${sheetName}" but did not find it`;
-    }
-    let jsonData = sheetToJson(sheet);
+  this.scheduleSheet = (sheetName) => {    
+    let jsonData = readSheetWithValidation(
+      sheetName,
+      true,
+      [...STUDENT_FIELDS,...days]
+    );
+
     for (let row of jsonData) {
-      const students = this.students;
       let student = this.studentMap[row.Username] || this.studentMap[row.ID];
       if (!student) {
         if (row.Username || row.ID) {
