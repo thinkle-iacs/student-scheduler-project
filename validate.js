@@ -17,7 +17,7 @@ function readSheetWithValidation (
   if (jsonData.length) {
     let sampleRow = jsonData[0];
     for (let c of columns) {
-      if (!sampleRow[c]) {
+      if (!sampleRow.hasOwnProperty(c)) {
         console.log('Missing required column',c);
         missingColumns.push(c);
       }
