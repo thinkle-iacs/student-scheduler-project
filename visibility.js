@@ -27,10 +27,8 @@ function hideSetup() {
   setSetupVisibility(false);
 }
 
-function setPlacementVisibility(visibility) {
-  let ss = SpreadsheetApp.getActiveSpreadsheet();
-  let placementList = ss.getSheetByName(PLACEMENT_SHEET_LIST);
-  let sheets = sheetToJson(placementList);
+function setPlacementVisibility(visibility) {    
+  let sheets = readSheetWithValidation(PLACEMENT_SHEET_LIST,true,PLACEMENT_LIST_FIELDS);  
   let names = [PLACEMENT_SHEET_LIST];
   for (let s of sheets) {
     names.push(s.SheetName);
