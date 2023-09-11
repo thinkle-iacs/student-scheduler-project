@@ -69,30 +69,39 @@ function Scheduler() {
             student.notes[d] = [];
           }
           let request = row[d];
+          /* We allow "Notes" to be entered in either a generic Note
+            field or in specific fields with names like Friday Note
+            - depends on the style of requester we're setting up.
+            */
+          let requestNote = row[d+' Note'] || row['Note'];          
+          if (requestNote) {
+            /* Format for easy concatenation */
+            requestNote = ` (${requestNote})`;
+          } else {
+            requestNote = '';
+          }
           let requestedBlock = this.schedules[d][request];
-          if (!requestedBlock) {
-            console.log("Weird, no requested block");
-            continue;
-            debugger;
+          if (!requestedBlock) {            
+            continue;            
           }
           if (student.schedule[d]) {
             console.log(
-              `Ignoring request from ${sheetName} for ${request} on ${d}: student already scheduled.`
+              `Ignoring request from ${sheetName} for ${request}${requestNote} on ${d}: student already scheduled.`
             );
             student.notes[d].push(
-              `Unable to give request from ${sheetName} for ${request} on ${d}: student already scheduled.`
+              `Unable to give request from ${sheetName} for ${request}${requestNote} on ${d}: student already scheduled.`
             );
           } else if (
             requestedBlock.Limit &&
             requestedBlock.roster.length >= requestedBlock.Limit
           ) {
             student.notes[d].push(
-              `Unable to give request from ${sheetName} for ${request} on ${d}: already at limit of ${requestedBlock.Limit}`
+              `Unable to give request from ${sheetName} for ${request}${requestNote} on ${d}: already at limit of ${requestedBlock.Limit}`
             );
           } else {
             student.schedule[d] = requestedBlock;
             requestedBlock.roster.push(student);
-            student.notes[d].push(`Honored request from ${sheetName}`);
+            student.notes[d].push(`Honored request from ${sheetName}${requestNote}`);
           }
         }
       }

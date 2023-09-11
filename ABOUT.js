@@ -5,9 +5,21 @@
 
 /* History
 *
+* Version 1.0 => Used in the 2022-2023 school year for our High School flex block
+* Version 1.1 => Allow clearing specific days.
+* Version 1.2 => Allow sorting
+* Versoin 1.3 => 
+*     - Improve handling of broken column headers (add validation / 
+*       auto-correction where possible)
+*     - Support custom "Note" fields for days.
+*     - Improve test suite
+*
 * In active use here: https://script.google.com/home/projects/1rQWbkycRWgHPuNVJWF8DuK-Rw__pZtH8e0WCYFPisdf4DJBGUbxmqtnY/edit
 * Last ported improvements back to this original on 12/19/23
-*
+* 
+* Also in active use for MS in two sheets:
+*   5/6: https://docs.google.com/spreadsheets/d/1oSK2TLAPty3971bbPQqH3ETg7Gu1Y0bwjBrhRFlINSM/edit#gid=1139748539
+*   7/8: https://docs.google.com/spreadsheets/d/1zyABqw9cT6ThcWJKhusdit5fKRbOh3GbCa9DjDZ-91M/edit#gid=0
 */
 
 /**
