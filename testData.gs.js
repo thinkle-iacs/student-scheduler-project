@@ -185,6 +185,54 @@ function TestData() {
       .setValues(placementOptions);
   };
 
+
+  this.populatePlacementSheet = (sheetName, percentageToFill) => {
+    console.log("FIXME populate ", percentageToFill, "of ", sheetName);
+    let sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+    let students = getStudents();
+    let nstudents = Math.ceil(students.length * percentageToFill);
+    let usernameRange = sheet.getRange('A2:A'+(nstudents+1));
+    let usernameCriteria = usernameRange.getDataValidation();
+    let usernameOptions = usernameCriteria.getCriteriaValues()[0].getValues().map((v)=>v[0]).filter((v)=>v);
+    let subset = [...usernameOptions];
+    if (nstudents < students.length) {
+      subset = getRandomSubset(usernameOptions,nstudents);
+    }
+    let toPush = subset.map((v)=>[v]);
+    usernameRange.setValues(toPush);
+    /* Now populate days... */
+    let dayColumns = [];
+    let headers = sheet.getRange('1:1').getValues()[0];
+    for (let i=5;i<headers.length;i++) {
+      let header = headers[i];
+      if (header) {
+        let range = sheet.getRange(2,i+1,nstudents,1);
+        let validationCriteria = range.getDataValidation();
+        if (validationCriteria) {
+          let options = validationCriteria.getCriteriaValues()[0].getValues().map((v)=>v[0]).filter((v)=>v);
+          if (options.length) {
+            let toPush = [];
+            for (let i=0; i<nstudents;i++) {
+              let option = options[Math.floor(Math.random()*options.length)];
+              toPush.push([option]);
+            }
+            range.setValues(toPush);
+          }
+        }
+      }
+    }
+  };
+
+  this.populateRequests = () => {
+    let placementSheets = getPlacementSheets();
+    let totalSheets = placementSheets.length;
+    for (let s of placementSheets) {
+      let percentageToFill =
+        Number(s["Priority (lower is higher)"]) / totalSheets;
+      this.populatePlacementSheet(s.SheetName, percentageToFill);
+    }
+  };
+
   this.init = () => {
     this.createNames();
   };
@@ -193,7 +241,8 @@ function TestData() {
 
 function populateExample() {
   let td = new TestData();
-  td.populateStudents();
-  td.populateSlots();
-  td.populateDays();
+  //td.populateStudents();
+  //td.populateSlots();
+  //td.populateDays();
+  td.populateRequests();
 }
