@@ -10,7 +10,10 @@ const AUTOMATION_FIELDS = [
   "Sheets to Show",
   "Sheets to Clear",
   "Days to Clear",
+  "Sheets to Sort",
+  "Sort Columns",
   "Last run",
+  "Errors",
 ];
 const AUTOMATION_DOCS = [
   "",
@@ -22,10 +25,12 @@ const AUTOMATION_DOCS = [
   "Which sheets to show (if any): comma separated list",
   "Which sheets to clear data from (if any): comma separated list",
   "Which days to clear from sheets we are clearing (or ALL to clear all days)",
+  "Names of sheets to sort",
+  "Headers of columns to sort by in order (we sort left-to-right, so rightmost is most important)",
   "Time of last run",
 ];
-const LASTRUN_COL = "J";
-const ERR_COL = "K";
+const LASTRUN_COL = "L";
+const ERR_COL = "M";
 
 function createTimerSheet() {
   let sheet = setupConfigSheet(AUTOMATION_SHEET, AUTOMATION_FIELDS, true);
@@ -156,6 +161,12 @@ function runAutomation(data) {
       if (data["Sheets to Show"]) {
         const sheets = data["Sheets to Show"].split(",");
         showSheets(sheets);
+      }
+      if (data["Sheets to Sort"] && data["Sort Columns"]) {
+        let sheets = data["Sheets to Sort"].split(",");
+        let columns = data["Sort Columns"].split(",");
+        console.log("Sort sheets", sheets, "by columns", columns);
+        sortSheets(sheets, columns);
       }
       console.log("Running now!");
       SpreadsheetApp.getActiveSpreadsheet()
