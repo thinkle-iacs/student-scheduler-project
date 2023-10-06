@@ -5,11 +5,15 @@ function onOpen(e) {
     .addItem("1. Start Set Up", "setupInitialConfig")
     .addItem("2. Set Up Placement Options", "setupPlacementOptions")
     .addItem("3. Add Placement/Request Sheet", "createPlacementSheet")
-    .addItem("4. Set Up Timers", "setupTimerSheet");
+    .addItem("4. Set Up Timers", "setupTimerSheet")
+    .addItem("5. Set Up Email", "setupEmailSheet");
 
   SpreadsheetApp.getUi()
     .createMenu("Schedule Tool")
     .addSubMenu(createMenu)
+    .addItem('Test Email Template',"showTemplateForSheetInteractive")
+    .addItem('Send Test Email',"sendTestEmailForSheetInteractive")
+    .addItem('Send Email for Sheet NOW',"sendEmailForSheetInteractive")
     /*.addItem(
     'Generate Form',
     'generateForm'

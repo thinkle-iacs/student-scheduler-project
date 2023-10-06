@@ -19,7 +19,7 @@ function readSheet(sheetName, skipBlank = true) {
     let headerRow = data[0];
     let jsonRows = [];
     for (let i = 1; i < data.length; i++) {
-      if (!skipBlank || data[i][0]) {
+      if (!skipBlank || data[i].some(cell => cell)) {
         let row = data[i];
         let json = {
           __row: i + 1,

@@ -5,14 +5,35 @@
 
 /* History
 *
+* NOTE: going forward we're annoyingly just copying this script over into a couple of other working documents
+* (bad process, yes, but better than dealing with Google's add-on publication process which is a nightmare).
+* Given that, let's start listing which files change with each version so we know how much copy/pasting
+* there is to do!
+*
 * Version 1.0 => Used in the 2022-2023 school year for our High School flex block
 * Version 1.1 => Allow clearing specific days.
 * Version 1.2 => Allow sorting
-* Versoin 1.3 => 
+* Version 1.3 => 
 *     - Improve handling of broken column headers (add validation / 
 *       auto-correction where possible)
 *     - Support custom "Note" fields for days.
 *     - Improve test suite
+* Version 1.4 => Add emailing support
+*   + FILES CHANGED:
+*     -   Code.gs - Added setup email method
+*     -   Email.gs - new module
+*     -   SheetSelectorUtil.gs - new module
+*     -   Automation.gs - add email columns
+*     -   DataReader.gs - fixed bug where we skipped rows based only on first column
+*   + Features
+*     - Define email templates for any sheet
+*     - Send emails about sheets from menu (and to test them)
+*     - Automate emails with Automation script.
+*   + Fixes
+*     - Fix bug in DataReader where we skip a row that has an empty first column
+*       but is otherwise full.
+*
+*
 *
 * In active use here: https://script.google.com/home/projects/1rQWbkycRWgHPuNVJWF8DuK-Rw__pZtH8e0WCYFPisdf4DJBGUbxmqtnY/edit
 * Last ported improvements back to this original on 12/19/23

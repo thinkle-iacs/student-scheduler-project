@@ -12,6 +12,7 @@ const AUTOMATION_FIELDS = [
   "Days to Clear",
   "Sheets to Sort",
   "Sort Columns",
+  "Email Sheet",
   "Last run",
   "Errors",
 ];
@@ -27,10 +28,11 @@ const AUTOMATION_DOCS = [
   "Which days to clear from sheets we are clearing (or ALL to clear all days)",
   "Names of sheets to sort",
   "Headers of columns to sort by in order (we sort left-to-right, so rightmost is most important)",
+  "Name of sheet to use for email data",
   "Time of last run",
 ];
-const LASTRUN_COL = "L";
-const ERR_COL = "M";
+const LASTRUN_COL = "M";
+const ERR_COL = "N";
 
 function createTimerSheet() {
   let sheet = setupConfigSheet(AUTOMATION_SHEET, AUTOMATION_FIELDS, true);
@@ -167,6 +169,10 @@ function runAutomation(data) {
         let columns = data["Sort Columns"].split(",");
         console.log("Sort sheets", sheets, "by columns", columns);
         sortSheets(sheets, columns);
+      }
+      if (data['Email Sheet']) {
+        console.log('Emailing sheet!');
+        emailSheet(data['Email Sheet']);
       }
       console.log("Running now!");
       SpreadsheetApp.getActiveSpreadsheet()
