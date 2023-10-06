@@ -216,7 +216,7 @@ function runAutomation(data) {
       }
       if (data['Email Sheet']) {
         console.log('Emailing sheet!');
-        emailSheet(data['Email Sheet']);
+        emailSheet(data['Email Sheet'],"Live");
       }
       console.log("Running now!");
       SpreadsheetApp.getActiveSpreadsheet()
