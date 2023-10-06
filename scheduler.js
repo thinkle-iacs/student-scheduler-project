@@ -148,11 +148,12 @@ function Scheduler() {
           }
         }
         if (s.notes && s.notes[d]) {
-          // HARDCODING NOTES WITH THE WORDS 'Default Placement' NOT TO SHOW UP
-          let notes = s.notes[d].filter(
-            (n) => n.indexOf("Default Placement") == -1
-          );
-          //row.push(s.notes[d].join('\n'));
+          // HARDCODING NOTES WITH THE excludedPhrases NOT TO SHOW UP
+          let excludedPhrases = ["Default Placement", "Catchall"];
+          let notes = s.notes[d].filter((n) => {            
+            return !excludedPhrases.some((phrase) => n.includes(phrase));
+          });
+          
           row.push(notes.join("\n"));
         } else {
           row.push("");
