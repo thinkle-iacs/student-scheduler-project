@@ -56,15 +56,59 @@ function createTimerSheet() {
     );
   sheet.getRange("2:2").setWrap(true);
 }
-
 function setupTimerSheet() {
-  createTimerSheet();
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(AUTOMATION_SHEET);
+
+  if (sheet) {
+    // Prompt user for confirmation to clear existing sheet
+    let ui = SpreadsheetApp.getUi();
+    let response = ui.alert(
+      'Clear automation sheet?',
+      'Do you want to clear the automation sheet and start over?',
+      ui.ButtonSet.YES_NO
+    );
+
+    // If YES, ask for additional confirmation and then clear sheet
+    if (response == ui.Button.YES) {
+      let secondResponse = ui.alert(
+        'Confirm Deletion',
+        'Really delete all your automation data?',
+        ui.ButtonSet.YES_NO
+      );
+
+      if (secondResponse == ui.Button.YES) {
+        createTimerSheet();
+      }
+    }
+  } else {
+    // If sheet doesn't exist, create it
+    createTimerSheet();
+  }
+
+  // If sheet exists, whether originally or newly created, validate its structure
+  sheet = ss.getSheetByName(AUTOMATION_SHEET); // Refresh sheet reference
+  validateSheetStructure(sheet, AUTOMATION_FIELDS);
   setupTimers();
+  SpreadsheetApp.getUi().alert(
+    "Set up automations to run every hour!"
+  );
 }
+
+function validateSheetStructure(sheet, expectedFields) {
+  let headers = sheet.getRange(1, 1, 1, expectedFields.length).getValues()[0];
+  for (let i = 0; i < expectedFields.length; i++) {
+    if (headers[i] !== expectedFields[i]) {
+      // Log or handle any discrepancies between actual and expected headers
+      console.error(`Expected header "${expectedFields[i]}" but found "${headers[i]}" in column ${i + 1}.`);
+    }
+  }
+}
+
 
 function setupTimers() {
   // RUN TRIGGERS EVERY HOUR
-  ScriptApp.newTrigger("runAutomations").timeBased().everyHours(1).create();
+  ScriptApp.newTrigger("runAutomations").timeBased().everyHours(1).create();  
 }
 
 function clearTimers() {
