@@ -91,9 +91,48 @@ function getTestRowIndex(data) {
   }
 }
 
+function testSheetHandler () {
+  const h = makeEmailSheetHandler('Tuesday Schedule');
+  const emailedOne = h.isRowEmailed(1);
+  const emailedTwo = h.isRowEmailed(80);
+  console.log('One',emailedOne,'two',emailedTwo)
+
+}
+
+function makeEmailSheetHandler (sheetName) {
+  let sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  let lastColNum = sheet.getDataRange().getLastColumn();
+  let emailColNum;
+  if (sheet.getRange('1:1').getValues()[0][lastColNum -1] == 'Email Status') {
+    emailColNum = lastColNum;
+  } else {
+    emailColNum = lastColNum + 1;
+    sheet.getRange(1,emailColNum).setValue('Email Status');
+  }
+  let alreadyEmailedData = sheet.getRange(1,emailColNum,sheet.getDataRange().getLastRow(),1).getValues().map((row)=>row[0]);
+
+  return {
+    // rownum is 0 indexed!
+    isRowEmailed (rownum) {
+      return alreadyEmailedData[rownum]
+    },
+    handleComplete (rownum) {
+      sheet.getRange(rownum+1,emailColNum,1,1).setValue('Emailed on '+new Date().toLocaleString());
+    },
+    handleError (dataRow, err, template, rownum) {
+      sheet.getRange(rownum+1,emailColNum,1,1).setValue(
+        "Error sending email: " + new Date().toLocaleString() + "\n"+err
+      )
+    }
+  }
+}
+
 function emailSheet(sheetName, mode = "Show Template", testEmailAddress = "") {
   // Example implementation; specifics might depend on your use case and email sending mechanism.
   let dataSheet = readSheet(sheetName, true);
+
+  let emailDataHandler = makeEmailSheetHandler (sheetName);
+
   let testIndex = getTestRowIndex(dataSheet);
   for (let i = 0; i < dataSheet.length; i++) {    
     if (mode == "Show Template" || mode == "Test Email") {
@@ -102,8 +141,21 @@ function emailSheet(sheetName, mode = "Show Template", testEmailAddress = "") {
     }
     let dataRow = dataSheet[i];
     let template = getTemplateForDataRow(dataRow, sheetName);
+    let emailedAlready = emailDataHandler.isRowEmailed(dataRow.__row-1);
     if (template) {
-      sendEmail(template, dataRow, mode, testEmailAddress);
+      if (!emailedAlready) {
+        try {
+          sendEmail(template, dataRow, mode, testEmailAddress);
+          emailDataHandler.handleComplete(dataRow.__row-1)
+        } catch (err) {
+          console.log('Failed to send email to ',dataRow.Email,mode,dataRow,template);
+          try {
+            emailDataHandler.handleError(dataRow,err,template,dataRow.__row-1);
+          } catch (err2) {
+            console.log('Error in error handling code',dataRow,err,template,handleError);
+          }
+        }
+      }
     } else {
       console.log(
         "No applicable template found for row",
