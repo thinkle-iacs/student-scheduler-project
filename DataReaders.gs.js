@@ -1,12 +1,16 @@
 function getPlacementOptions() {
-  return readSheetWithValidation(PLACEMENT_SHEET,true,PLACEMENT_FIELDS);
+  return readSheetWithValidation(PLACEMENT_SHEET, true, PLACEMENT_FIELDS);
 }
 function getPlacementSheets() {
-  return readSheetWithValidation(PLACEMENT_SHEET_LIST,true,PLACEMENT_LIST_FIELDS);
+  return readSheetWithValidation(
+    PLACEMENT_SHEET_LIST,
+    true,
+    PLACEMENT_LIST_FIELDS
+  );
 }
 
 function getStudents() {
-  return readSheetWithValidation(STUDENT_SHEET,true,STUDENT_FIELDS);
+  return readSheetWithValidation(STUDENT_SHEET, true, STUDENT_FIELDS);
 }
 
 function readSheet(sheetName, skipBlank = true) {
@@ -19,7 +23,7 @@ function readSheet(sheetName, skipBlank = true) {
     let headerRow = data[0];
     let jsonRows = [];
     for (let i = 1; i < data.length; i++) {
-      if (!skipBlank || data[i][0]) {
+      if (!skipBlank || data[i].some((cell) => cell)) {
         let row = data[i];
         let json = {
           __row: i + 1,
