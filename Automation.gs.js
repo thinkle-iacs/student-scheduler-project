@@ -13,6 +13,8 @@ const AUTOMATION_FIELDS = [
   "Sheets to Sort",
   "Sort Columns",
   "Email Sheet",
+  "Sheets to Copy",
+  "Copy To",
   "Last run",
   "Errors",
 ];
@@ -29,10 +31,12 @@ const AUTOMATION_DOCS = [
   "Names of sheets to sort",
   "Headers of columns to sort by in order (we sort left-to-right, so rightmost is most important)",
   "Name of sheet to use for email data",
+  "Names of sheets to copy (comma separated)",
+  "URL of spreadsheet to Copy Data to",
   "Time of last run",
 ];
-const LASTRUN_COL = "M";
-const ERR_COL = "N";
+const LASTRUN_COL = "O";
+const ERR_COL = "P";
 
 function createTimerSheet() {
   let sheet = setupConfigSheet(AUTOMATION_SHEET, AUTOMATION_FIELDS, true);
@@ -64,16 +68,16 @@ function setupTimerSheet() {
     // Prompt user for confirmation to clear existing sheet
     let ui = SpreadsheetApp.getUi();
     let response = ui.alert(
-      'Clear automation sheet?',
-      'Do you want to clear the automation sheet and start over?',
+      "Clear automation sheet?",
+      "Do you want to clear the automation sheet and start over?",
       ui.ButtonSet.YES_NO
     );
 
     // If YES, ask for additional confirmation and then clear sheet
     if (response == ui.Button.YES) {
       let secondResponse = ui.alert(
-        'Confirm Deletion',
-        'Really delete all your automation data?',
+        "Confirm Deletion",
+        "Really delete all your automation data?",
         ui.ButtonSet.YES_NO
       );
 
@@ -90,9 +94,7 @@ function setupTimerSheet() {
   sheet = ss.getSheetByName(AUTOMATION_SHEET); // Refresh sheet reference
   validateSheetStructure(sheet, AUTOMATION_FIELDS);
   setupTimers();
-  SpreadsheetApp.getUi().alert(
-    "Set up automations to run every hour!"
-  );
+  SpreadsheetApp.getUi().alert("Set up automations to run every hour!");
 }
 
 function validateSheetStructure(sheet, expectedFields) {
@@ -100,15 +102,18 @@ function validateSheetStructure(sheet, expectedFields) {
   for (let i = 0; i < expectedFields.length; i++) {
     if (headers[i] !== expectedFields[i]) {
       // Log or handle any discrepancies between actual and expected headers
-      console.error(`Expected header "${expectedFields[i]}" but found "${headers[i]}" in column ${i + 1}.`);
+      console.error(
+        `Expected header "${expectedFields[i]}" but found "${
+          headers[i]
+        }" in column ${i + 1}.`
+      );
     }
   }
 }
 
-
 function setupTimers() {
   // RUN TRIGGERS EVERY HOUR
-  ScriptApp.newTrigger("runAutomations").timeBased().everyHours(1).create();  
+  ScriptApp.newTrigger("runAutomations").timeBased().everyHours(1).create();
 }
 
 function clearTimers() {
@@ -174,6 +179,11 @@ function isToday(date) {
   }
 }
 
+function splitAndClean(input) {
+  if (typeof input !== "string") return [];
+  return input.split(/\s*,\s*/).filter(Boolean);
+}
+
 function runAutomation(data) {
   let now = new Date();
   console.log("Run for", data);
@@ -189,7 +199,7 @@ function runAutomation(data) {
         createSchedule();
       }
       if (data["Sheets to Clear"]) {
-        const sheets = data["Sheets to Clear"].split(",");
+        const sheets = splitAndClean(data["Sheets to Clear"]);
         const dayValue = data["Days to Clear"];
         let days;
         if (dayValue.toUpperCase() == "ALL") {
@@ -201,22 +211,28 @@ function runAutomation(data) {
         clearSheets(sheets, days);
       }
       if (data["Sheets to Hide"]) {
-        const sheets = data["Sheets to Hide"].split(",");
+        const sheets = splitAndClean(data["Sheets to Hide"]);
         hideSheets(sheets);
       }
       if (data["Sheets to Show"]) {
-        const sheets = data["Sheets to Show"].split(",");
+        const sheets = splitAndClean(data["Sheets to Show"]);
         showSheets(sheets);
       }
       if (data["Sheets to Sort"] && data["Sort Columns"]) {
-        let sheets = data["Sheets to Sort"].split(",");
-        let columns = data["Sort Columns"].split(",");
+        let sheets = splitAndClean(data["Sheets to Sort"]);
+        let columns = splitAndClean(data["Sort Columns"]);
         console.log("Sort sheets", sheets, "by columns", columns);
         sortSheets(sheets, columns);
       }
-      if (data['Email Sheet']) {
-        console.log('Emailing sheet!');
-        emailSheet(data['Email Sheet'],"Live");
+      if (data["Email Sheet"]) {
+        console.log("Emailing sheet!");
+        emailSheet(data["Email Sheet"], "Live");
+      }
+      if (data["Sheets to Copy"] && data["Copy To"]) {
+        let sheets = splitAndClean(data["Sheets to Copy"]);
+        let copyTo = data["Copy To"];
+        console.log("Copy sheets", sheets, "to", copyTo);
+        copySheets(sheets, copyTo);
       }
       console.log("Running now!");
       SpreadsheetApp.getActiveSpreadsheet()
