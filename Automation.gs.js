@@ -131,6 +131,10 @@ function runAutomations() {
   console.log("Got me some data: ", JSON.stringify(automationData));
   let now = new Date();
   for (let row of automationData) {
+    if (!row[ACTIVE]) {
+      console.log("Ignoring inactive row: ", row);
+      continue;
+    }
     let isTheDay = false;
     if (row.Date) {
       let dateObject = new Date(row.Date);
