@@ -1,6 +1,6 @@
 const TINY = ["Username", "ID", "Limit", "Notes"];
-const BOLD = ["Name", "Activity"];
-const WRAP = ["Name", "Activity", "Notes"];
+const BOLD = ["Name", "Activity", "Room"];
+const WRAP = ["Name", "Activity", "Room", "Notes"];
 
 function Scheduler() {
   let ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -13,7 +13,7 @@ function Scheduler() {
     schedules[d] = {};
   }
 
-  this.readSchedules = () => {            
+  this.readSchedules = () => {
     let jsonData = getPlacementOptions();
     for (let slotRow of jsonData) {
       for (let d of days) {
@@ -27,7 +27,7 @@ function Scheduler() {
     }
   };
 
-  this.readStudents = () => {    
+  this.readStudents = () => {
     this.students = getStudents();
     this.studentMap = {};
     for (let s of this.students) {
@@ -45,11 +45,11 @@ function Scheduler() {
     this.readSchedules();
   };
 
-  this.scheduleSheet = (sheetName) => {    
+  this.scheduleSheet = (sheetName) => {
     let jsonData = readSheetWithValidation(
       sheetName,
       true,
-      [...STUDENT_FIELDS,...days]
+      [...STUDENT_FIELDS, ...days]
     );
 
     for (let row of jsonData) {
@@ -73,7 +73,7 @@ function Scheduler() {
             field or in specific fields with names like Friday Note
             - depends on the style of requester we're setting up.
             */
-          let requestNote = row[d+' Note'] || row['Note'];          
+          let requestNote = row[d + ' Note'] || row['Note'];
           if (requestNote) {
             /* Format for easy concatenation */
             requestNote = ` (${requestNote})`;
@@ -81,8 +81,8 @@ function Scheduler() {
             requestNote = '';
           }
           let requestedBlock = this.schedules[d][request];
-          if (!requestedBlock) {            
-            continue;            
+          if (!requestedBlock) {
+            continue;
           }
           if (student.schedule[d]) {
             console.log(
@@ -150,10 +150,10 @@ function Scheduler() {
         if (s.notes && s.notes[d]) {
           // HARDCODING NOTES WITH THE excludedPhrases NOT TO SHOW UP
           let excludedPhrases = ["Default Placement", "Catchall"];
-          let notes = s.notes[d].filter((n) => {            
+          let notes = s.notes[d].filter((n) => {
             return !excludedPhrases.some((phrase) => n.includes(phrase));
           });
-          
+
           row.push(notes.join("\n"));
         } else {
           row.push("");

@@ -41,6 +41,7 @@
  * Version 1.5.1 => Fix bug that meant "Active" checkbox did nothing
  *   + FILES CHANGED:
  *     - Automation.gs - Implement "Active" checkbox check on run automations
+ * Version 1.6 => Add Room field to placement options / generated schedule.
  *
  * In active use here: https://script.google.com/home/projects/1rQWbkycRWgHPuNVJWF8DuK-Rw__pZtH8e0WCYFPisdf4DJBGUbxmqtnY/edit
  * Last ported improvements back to this original on 12/19/23

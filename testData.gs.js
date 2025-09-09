@@ -168,20 +168,20 @@ function TestData() {
     let slotSheet = ss.getSheetByName(PLACEMENT_SHEET);
     // hardcoded placement fields
     let placementOptions = [
-      ["Chorus", "Mr Singer", 20, true, true, true],
-      ["Intensive Writing", "Mr. Writer", 4, true, false, false],
-      ["Mathletes", "Ms. Math", 15, false, true, false],
-      ["A hablar!", "Srta Charla", 22, true, true, true],
-      ["Study Hall", "Ms Learner", 30, true, true, true],
-      ["Flag Football", "Mr Tough", 40, false, false, true],
-      ["Frisbee Golf", "Sra Fly", 30, false, false, true],
-      ["Lab Time", "Ms Petri", 22, true, true, false],
-      ["Overflow", "Mister Mister", false, true, true, true],
-      ["Friday Fun", "Mr. Fun", false, false, false, true],
-      ["Monday Mania", "Ms. Manic", false, true, false, false],
+      ["Chorus", "Mr Singer", "Room 101", 20, true, true, true],
+      ["Intensive Writing", "Mr. Writer", "Room 102", 4, true, false, false],
+      ["Mathletes", "Ms. Math", "Room 103", 15, false, true, false],
+      ["A hablar!", "Srta Charla", "Room 104", 22, true, true, true],
+      ["Study Hall", "Ms Learner", "Room 105", 30, true, true, true],
+      ["Flag Football", "Mr Tough", "Field 1", 40, false, false, true],
+      ["Frisbee Golf", "Sra Fly", "Field 2", 30, false, false, true],
+      ["Lab Time", "Ms Petri", "Lab 1", 22, true, true, false],
+      ["Overflow", "Mister Mister", "Overflow Room", false, true, true, true],
+      ["Friday Fun", "Mr. Fun", "Gym", false, false, false, true],
+      ["Monday Mania", "Ms. Manic", "Room 106", false, true, false, false],
     ];
     slotSheet
-      .getRange(2, 1, placementOptions.length, 6)
+      .getRange(2, 1, placementOptions.length, 7)
       .setValues(placementOptions);
   };
 
@@ -191,29 +191,29 @@ function TestData() {
     let sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
     let students = getStudents();
     let nstudents = Math.ceil(students.length * percentageToFill);
-    let usernameRange = sheet.getRange('A2:A'+(nstudents+1));
+    let usernameRange = sheet.getRange('A2:A' + (nstudents + 1));
     let usernameCriteria = usernameRange.getDataValidation();
-    let usernameOptions = usernameCriteria.getCriteriaValues()[0].getValues().map((v)=>v[0]).filter((v)=>v);
+    let usernameOptions = usernameCriteria.getCriteriaValues()[0].getValues().map((v) => v[0]).filter((v) => v);
     let subset = [...usernameOptions];
     if (nstudents < students.length) {
-      subset = getRandomSubset(usernameOptions,nstudents);
+      subset = getRandomSubset(usernameOptions, nstudents);
     }
-    let toPush = subset.map((v)=>[v]);
+    let toPush = subset.map((v) => [v]);
     usernameRange.setValues(toPush);
     /* Now populate days... */
     let dayColumns = [];
     let headers = sheet.getRange('1:1').getValues()[0];
-    for (let i=5;i<headers.length;i++) {
+    for (let i = 5; i < headers.length; i++) {
       let header = headers[i];
       if (header) {
-        let range = sheet.getRange(2,i+1,nstudents,1);
+        let range = sheet.getRange(2, i + 1, nstudents, 1);
         let validationCriteria = range.getDataValidation();
         if (validationCriteria) {
-          let options = validationCriteria.getCriteriaValues()[0].getValues().map((v)=>v[0]).filter((v)=>v);
+          let options = validationCriteria.getCriteriaValues()[0].getValues().map((v) => v[0]).filter((v) => v);
           if (options.length) {
             let toPush = [];
-            for (let i=0; i<nstudents;i++) {
-              let option = options[Math.floor(Math.random()*options.length)];
+            for (let i = 0; i < nstudents; i++) {
+              let option = options[Math.floor(Math.random() * options.length)];
               toPush.push([option]);
             }
             range.setValues(toPush);

@@ -6,7 +6,7 @@ const STUDENT_FIELDS = ["Username", "ID", "Name", "YOG", "Advisory"];
 
 const DAY_FIELDS = ["Day Name"];
 
-const PLACEMENT_FIELDS = ["Activity", "Staff", "Limit"];
+const PLACEMENT_FIELDS = ["Activity", "Staff", "Room", "Limit"];
 
 const PLACEMENT_SHEET_LIST = "Request Sheets";
 const PLACEMENT_LIST_FIELDS = [
