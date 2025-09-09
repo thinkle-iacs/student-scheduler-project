@@ -2,7 +2,7 @@
  * Original Script Lives Here: https://docs.google.com/spreadsheets/d/1WGKQpIOSarvEkGrDRo318Gzx3sf-JiqeURmDAT_kN2w/edit#gid=0
  * Please port improvements back there!
  */
-
+/* Version control here: https://github.com/thinkle-iacs/student-scheduler-project */
 /* History
  *
  * NOTE: going forward we're annoyingly just copying this script over into a couple of other working documents
