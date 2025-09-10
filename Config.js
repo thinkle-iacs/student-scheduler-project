@@ -24,6 +24,7 @@ function setupReadOnly(sheet) {
 function setupInitialConfig() {
   setupConfigSheet(STUDENT_SHEET, STUDENT_FIELDS);
   setupConfigSheet(DAY_SHEET, DAY_FIELDS);
+  writePostSetupInstructions();
   SpreadsheetApp.getActiveSpreadsheet().toast(
     "Add at least one Day to Day Sheet, then set up placement options."
   );

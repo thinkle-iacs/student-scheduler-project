@@ -1,44 +1,68 @@
-/* This just creates our menu setup */
+// Menu item labels as constants for consistency
+const MENU = {
+  setupInitialConfig: "1. Start Set Up",
+  setupPlacementOptions: "2. Set Up Placement Options",
+  createPlacementSheet: "3. Add Placement/Request Sheet",
+  setupTimerSheet: "4. Set Up Timers",
+  setupEmailSheet: "5. Set Up Email",
+  testEmailTemplate: "Test Email Template",
+  sendTestEmail: "Send Test Email",
+  sendEmailForSheet: "Send Email for Sheet NOW",
+  makeSchedule: "Make Schedule",
+  runAutomations: "Run automations NOW (manually run)",
+  showSchedules: "Show Schedules",
+  hideSchedules: "Hide Schedules",
+  showSetup: "Show Setup Sheets",
+  hideSetup: "Hide Setup Sheets",
+  showPlacements: "Show placement sheets",
+  hidePlacements: "Hide placement sheets",
+  turnOffTimers: "Turn off timers",
+  clearAll: "Clear ALL",
+  showHideSheetsMenu: "Show/Hide Sheets",
+  breakDownMenu: "Break Down",
+  setupMenu: "Setup",
+  scheduleToolMenu: "Schedule Tool"
+};
+
 function onOpen(e) {
   let createMenu = SpreadsheetApp.getUi()
-    .createMenu("Setup")
-    .addItem("1. Start Set Up", "setupInitialConfig")
-    .addItem("2. Set Up Placement Options", "setupPlacementOptions")
-    .addItem("3. Add Placement/Request Sheet", "createPlacementSheet")
-    .addItem("4. Set Up Timers", "setupTimerSheet")
-    .addItem("5. Set Up Email", "setupEmailSheet");
+    .createMenu(`${MENU.setupMenu}`)
+    .addItem(`${MENU.setupInitialConfig}`, "setupInitialConfig")
+    .addItem(`${MENU.setupPlacementOptions}`, "setupPlacementOptions")
+    .addItem(`${MENU.createPlacementSheet}`, "createPlacementSheet")
+    .addItem(`${MENU.setupTimerSheet}`, "setupTimerSheet")
+    .addItem(`${MENU.setupEmailSheet}`, "setupEmailSheet");
 
   SpreadsheetApp.getUi()
-    .createMenu("Schedule Tool")
+    .createMenu(`${MENU.scheduleToolMenu}`)
     .addSubMenu(createMenu)
-    .addItem('Test Email Template',"showTemplateForSheetInteractive")
-    .addItem('Send Test Email',"sendTestEmailForSheetInteractive")
-    .addItem('Send Email for Sheet NOW',"sendEmailForSheetInteractive")
+    .addItem(`${MENU.testEmailTemplate}`, "showTemplateForSheetInteractive")
+    .addItem(`${MENU.sendTestEmail}`, "sendTestEmailForSheetInteractive")
+    .addItem(`${MENU.sendEmailForSheet}`, "sendEmailForSheetInteractive")
     /*.addItem(
     'Generate Form',
     'generateForm'
   )
   */
-    .addItem("Make Schedule", "createSchedule")
-    .addItem("Run automations NOW (manually run)", "runAutomations")
+    .addItem(`${MENU.makeSchedule}`, "createSchedule")
+    .addItem(`${MENU.runAutomations}`, "runAutomations")
     .addSubMenu(
       SpreadsheetApp.getUi()
-        .createMenu("Show/Hide Sheets")
-        .addItem("Show Schedules", "showSchedules")
-        .addItem("Hide Schedules", "hideSchedules")
+        .createMenu(`${MENU.showHideSheetsMenu}`)
+        .addItem(`${MENU.showSchedules}`, "showSchedules")
+        .addItem(`${MENU.hideSchedules}`, "hideSchedules")
         .addSeparator()
-        .addItem("Show Setup Sheets", "showSetup")
-        .addItem("Hide Setup Sheets", "hideSetup")
+        .addItem(`${MENU.showSetup}`, "showSetup")
+        .addItem(`${MENU.hideSetup}`, "hideSetup")
         .addSeparator()
-        .addItem("Show placement sheets", "showPlacements")
-        .addItem("Hide placement sheets", "hidePlacements")
+        .addItem(`${MENU.showPlacements}`, "showPlacements")
+        .addItem(`${MENU.hidePlacements}`, "hidePlacements")
     )
     .addSubMenu(
       SpreadsheetApp.getUi()
-        .createMenu("Break Down")
-        .addItem("Turn off timers", "clearTimers")
-        .addItem("Clear ALL", "clearAll")
+        .createMenu(`${MENU.breakDownMenu}`)
+        .addItem(`${MENU.turnOffTimers}`, "clearTimers")
+        .addItem(`${MENU.clearAll}`, "clearAll")
     )
-
     .addToUi();
 }
