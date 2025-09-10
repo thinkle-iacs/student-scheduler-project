@@ -28,7 +28,7 @@ const blurbs = {
   'Scheduling': 'A7',
   'Automation': 'A8',
   'Emailing': 'A9',
-  'Tips': 'A10'
+  'SheetGuide': 'A10'
 };
 
 
@@ -49,7 +49,7 @@ function writePostSetupInstructions() {
     { key: 'Scheduling', label: 'Generating Schedules' },
     { key: 'Automation', label: 'Automation' },
     { key: 'Emailing', label: 'Emailing Schedules' },
-    { key: 'Tips', label: 'Tips & Troubleshooting' }
+    { key: 'SheetGuide', label: 'Guide to Tabs' }
   ];
   const tocCols = tocItems.length;
   for (let c = 1; c <= tocCols; c++) {
@@ -201,28 +201,54 @@ Subject: Your Wednesday Flex Block Placement
 Template: Hello {{Name}},Your Wednesday activity is {{Activity}} in {{Room}} with {{Staff}}. See you there!  
     <p>See the ${EMAIL_SHEET} sheet for more details and add your own templates as needed. You can have multiple templates for different groups, advisories, or activities.</p>`
   );
-  // Add a section for Show/Hide Sheets and Break Down menu items
+  // Guide to Tabs section
   setRichInstructions(
-    sheet.getRange(blurbs['Tips']),
-    `<h3>Tips & Troubleshooting</h3>
+    sheet.getRange(blurbs['SheetGuide']),
+    `<h3>Guide to Tabs</h3>
+    <p>The Student Scheduler creates and manages several different types of sheets. Here's what each one does:</p>
+    
+    <h4>Setup Sheets (Created Once)</h4>
     <ul>
-      <li>Use the <b>${MENU.showHideSheetsMenu}</b> submenu in the ${MENU.scheduleToolMenu} menu to show or hide Schedules, Setup Sheets, or Placement Sheets as needed:</li>
-      <ul>
-        <li><b>${MENU.showSchedules}</b> / <b>${MENU.hideSchedules}</b></li>
-        <li><b>${MENU.showSetup}</b> / <b>${MENU.hideSetup}</b></li>
-        <li><b>${MENU.showPlacements}</b> / <b>${MENU.hidePlacements}</b></li>
-      </ul>
-      <li>To turn off all timers or clear all automation, use the <b>${MENU.breakDownMenu}</b> submenu:</li>
-      <ul>
-        <li><b>${MENU.turnOffTimers}</b>: Turn off all automation triggers.</li>
-        <li><b>${MENU.clearAll}</b>: Clear all automation and configuration data.</li>
-      </ul>
-      <li>Check the "Notes" column in schedules for feedback on unfulfilled requests.</li>
-      <li>Update placement options and requests as needed—re-run the scheduler to refresh schedules.</li>
-      <li>Room/limit issues? Double-check your ${PLACEMENT_SHEET} sheet for correct limits and availability.</li>
-      <li>For automation and emailing, make sure you have the right permissions and triggers set up in Apps Script.</li>
+      <li><b>${DAY_SHEET}</b>: Lists all the days or blocks you want to schedule (e.g., "Monday", "Tuesday", "Flex A", "Flex B"). Each day you add here will get its own schedule tab.</li>
+      <li><b>${STUDENT_SHEET}</b>: Your master list of students with their information (Name, ID, Advisory, etc.). This data appears on all request and schedule sheets.</li>
+      <li><b>${PLACEMENT_SHEET}</b>: Defines all available activities, staff, rooms, limits, and which days each activity is available. This is your "master menu" of scheduling options.</li>
+      <li><b>${PLACEMENT_SHEET_LIST}</b>: Lists all your request sheets and their priority order (lower number = higher priority). Controls which requests get honored first when there are conflicts.</li>
+      <li><b>_Placements_by_Day</b>: A helper sheet that automatically shows which activities are available on each day. This is read-only and updates automatically based on your ${PLACEMENT_SHEET}.</li>
     </ul>
-    <p>For more help, see the ABOUT sheet or contact your system administrator.</p>`
+    
+    <h4>Request Sheets (You Create These)</h4>
+    <ul>
+      <li><b>Custom Named Sheets</b>: These are the sheets where you assign students to activities for each day. You create these using <b>${MENU.createPlacementSheet}</b>, giving each one a descriptive name like "Teacher Requests", "Student Requests", or "Spillover". Each sheet has dropdowns populated from your setup sheets.</li>
+      <li>Examples: "Teacher Requests" (priority 1), "Student Choice" (priority 2), "Administrative Assignments" (priority 3)</li>
+    </ul>
+    
+    <h4>Schedule Sheets (Auto-Generated)</h4>
+    <ul>
+      <li><b>[Day] Schedule</b>: One sheet for each day you defined (e.g., "Monday Schedule", "Tuesday Schedule", "Flex A Schedule"). These show the final assignments for each student with attendance checkboxes and notes about how assignments were made.</li>
+      <li>These sheets are recreated each time you run <b>${MENU.makeSchedule}</b></li>
+    </ul>
+    
+    <h4>Automation & Communication (Optional)</h4>
+    <ul>
+      <li><b>${EMAIL_SHEET}</b>: Templates for emailing schedules to students or staff. Supports different templates based on advisory, activity, or other criteria. Created using <b>${MENU.setupEmailSheet}</b>.</li>
+      <li><b>${AUTOMATION_SHEET}</b>: Rules for automatically running schedules, hiding/showing sheets, sending emails, etc. on specific days and times. Created using <b>${MENU.setupTimerSheet}</b>.</li>
+    </ul>
+    
+    <h4>Documentation</h4>
+    <ul>
+      <li><b>Instructions</b>: This sheet! Created automatically and updated when you run setup functions.</li>
+      <li><b>ABOUT</b>: Technical documentation about the tool's features and version history.</li>
+    </ul>
+    
+    <h4>Managing Sheet Visibility</h4>
+    <p>Use the <b>${MENU.showHideSheetsMenu}</b> submenu in the ${MENU.scheduleToolMenu} menu to control which sheets are visible:</p>
+    <ul>
+      <li><b>${MENU.showSchedules}</b> / <b>${MENU.hideSchedules}</b>: Show/hide all [Day] Schedule sheets</li>
+      <li><b>${MENU.showSetup}</b> / <b>${MENU.hideSetup}</b>: Show/hide the core setup sheets (${DAY_SHEET}, ${STUDENT_SHEET}, ${PLACEMENT_SHEET}, ${PLACEMENT_SHEET_LIST})</li>
+      <li><b>${MENU.showPlacements}</b> / <b>${MENU.hidePlacements}</b>: Show/hide request sheets and the ${PLACEMENT_SHEET_LIST}</li>
+    </ul>
+    
+    <p><strong>Pro Tip:</strong> During setup, keep setup sheets visible. During daily use, hide setup sheets and show only schedule sheets for a cleaner interface.</p>`
   );
 
   // Set column widths for readability (content spans the first N TOC columns)
