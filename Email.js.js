@@ -53,7 +53,12 @@ function applyTemplate(template, row) {
   return (filledTemplate = template.template.replace(
     /\{\{([^\}]+)\}\}/g,
     function (_, key) {
-      key = key.trim();
+      try {
+        key = key.trim();
+      } catch (err) {
+        console.log('Unable to trim key: ',key,'in template',template.template);
+        throw err;
+      }
       var value = row[key];
       // Check if the value is boolean and replace with respective HTML.
       if (typeof value === "boolean") {
@@ -71,8 +76,15 @@ function applyTemplate(template, row) {
         var daysToAdd = parseInt(key.split("+")[1]) || 0; // Extract number of days to add
         return getFormattedCurrentDate(daysToAdd);
       }
+      try {        
+        return String(value ?? "")
+          .trim()
+          .replace(/\n/g, "\n<br>\n");        
+      } catch (err) {
+        console.log('Warning issue trimming value "',value,'" for key "',key,'"');
 
-      return value.trim().replace(/\n/g, "\n<br>\n") || "";
+        return "";
+      }
     }
   ));
 }
@@ -167,7 +179,7 @@ function emailSheet(sheetName, mode = "Show Template", testEmailAddress = "") {
 }
 
 function testEmailSheet() {
-  emailSheet("Friday Schedule", "Show Template");
+  emailSheet("Friday 1:22-2:00 Schedule", "Live");
 }
 
 function sendEmail(
